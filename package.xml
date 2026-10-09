@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>t800_description</name>
+  <version>0.0.1</version>
+  <description>T800 robot description for Gazebo and RViz</description>
+
+  <maintainer email="user@example.com">user</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+</package>
+

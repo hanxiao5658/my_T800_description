@@ -1,0 +1,21 @@
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="true"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+  </include>
+
+  <param name="robot_description"
+         command="$(find xacro)/xacro '$(find t800_description)/urdf/serial_t800.urdf'" />
+
+  <node name="spawn_t800"
+        pkg="gazebo_ros"
+        type="spawn_model"
+        args="-urdf -param robot_description -model t800 -z 1.0"
+        output="screen" />
+
+  <node name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher" />
+</launch>
+
