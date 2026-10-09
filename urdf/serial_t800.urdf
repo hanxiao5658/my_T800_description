@@ -197,9 +197,9 @@
       <inertia ixx="0.00712783" ixy="4.224e-05" ixz="0.00027962" iyy="0.00791389" iyz="-0.00036741" izz="0.00484137" />
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 3.14" />
       <geometry>
-        <mesh filename="package://t800_description/meshes/LINK_HIP_PITCH_R.dae" />
+        <mesh filename="package://t800_description/meshes/LINK_HIP_PITCH_L.dae" />
       </geometry>
     </visual>
     <collision>
@@ -543,10 +543,16 @@
       <inertia ixx="0.00239989" ixy="-9.745e-05" ixz="-3.159e-05" iyy="0.00144918" iyz="-0.00030251" izz="0.0020074" />
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 3.14" />
       <geometry>
-        <mesh filename="package://t800_description/meshes/LINK_SHOULDER_PITCH_R.dae" />
+        <mesh filename="package://t800_description/meshes/LINK_SHOULDER_PITCH_L.dae" />
       </geometry>
+      <material name="t800_gray">
+      	<color rgba="0.65 0.65 0.65 1.0"/>
+      </material>
+      <gazebo reference="SHOULDER_PITCH_R">
+  	<material>Gazebo/Grey</material>
+      </gazebo>
     </visual>
     <collision>
       <origin xyz="-0.0 -0.065 -0.012" rpy="0 0 0" />
@@ -569,9 +575,9 @@
       <inertia ixx="0.00156879" ixy="1.213e-05" ixz="6.803e-05" iyy="0.0021529" iyz="-0.00010408" izz="0.00145914" />
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 3.14" />
       <geometry>
-        <mesh filename="package://t800_description/meshes/LINK_SHOULDER_ROLL_R.dae" />
+        <mesh filename="package://t800_description/meshes/LINK_SHOULDER_ROLL_L.dae" />
       </geometry>
     </visual>
   </link>
