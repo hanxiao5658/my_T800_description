@@ -6,7 +6,7 @@
   </include>
 
   <param name="robot_description"
-         command="$(find xacro)/xacro '$(find t800_description)/urdf/serial_t800.urdf'" />
+         command="$(find xacro)/xacro '$(find t800_description)/urdf/serial_t800_visual_sync.urdf'" />
 
   <node name="spawn_t800"
         pkg="gazebo_ros"
