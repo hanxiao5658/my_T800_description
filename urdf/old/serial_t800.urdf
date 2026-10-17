@@ -623,7 +623,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="package://t800_description/meshes/LINK_ELBOW_PITCH_R.dae" />
+        <mesh filename="package://t800_description/meshes/LINK_ELBOW_PITCH_R.obj" />
       </geometry>
     </visual>
     <collision>
