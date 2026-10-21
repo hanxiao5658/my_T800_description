@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+  <!--
+    Launch two existing ROS1 MuJoCo -> Gazebo synchronization nodes.
+    Gazebo must already be running and the model must be spawned as "t800".
+    No URDF or world is loaded by this launch file.
+    roslaunch will terminate both child processes when Ctrl+C is pressed.
+  -->
+
+  <!-- MuJoCo /my_ros2/hardware/joint_state -> Gazebo joint positions -->
+  <!-- No sync_rate override: keep the script's current default. -->
+  <node pkg="t800_description"
+        type="t800_mujoco_joint_sync.py"
+        name="t800_mujoco_joint_sync"
+        output="screen"
+        respawn="false" />
+
+  <!-- MuJoCo /my_ros2/simulation/base_link -> Gazebo pose + twist -->
+  <node pkg="t800_description"
+        type="t800_mujoco_base_pose_relative_sync_with_twist.py"
+        name="t800_mujoco_base_pose_relative_sync_with_twist"
+        output="screen"
+        respawn="false">
+    <param name="sync_rate" value="100.0" />
+    <param name="stale_timeout" value="0.5" />
+  </node>
+</launch>

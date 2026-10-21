@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Gazebo Classic ROS1 Noetic; no T800 robot is spawned. -->
+  <arg name="gui" default="true" />
+  <arg name="paused" default="false" />
+  <arg name="verbose" default="true" />
+
+  <!--
+    Make model://t800_description/meshes/hall.dae resolvable.
+    $(find t800_description)/.. contains the t800_description directory.
+    Preserve any other existing Gazebo model search paths.
+  -->
+  <env name="GAZEBO_MODEL_PATH"
+       value="$(find t800_description)/..:$(optenv GAZEBO_MODEL_PATH)" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find t800_description)/worlds/hall.world" />
+    <arg name="paused" value="$(arg paused)" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="verbose" value="$(arg verbose)" />
+  </include>
+</launch>
