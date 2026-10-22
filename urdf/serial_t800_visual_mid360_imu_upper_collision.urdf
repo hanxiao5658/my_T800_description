@@ -842,7 +842,7 @@
     </visual>
   </link>
   <joint name="t800_chest_to_mid360" type="fixed">
-    <origin xyz="0.13 0.0 0.38" rpy="0.0 -0.0 0"/>
+    <origin xyz="0.13 0.0 0.38" rpy="0.0 0.3489 0"/>
     <parent link="LINK_WAIST_YAW"/>
     <child link="mid360_link"/>
   </joint>
@@ -886,7 +886,7 @@
             <stddev>0.0</stddev>
           </noise>
         </ray>
-        <visualize>false</visualize>
+        <visualize>true</visualize>
         <samples>20000</samples>
         <downsample>2</downsample>
         <csv_file_name>mid360-real-centr.csv</csv_file_name>

@@ -1,16 +1,7 @@
 <?xml version="1.0"?>
-<!--
-  Gazebo Classic 11 / ROS1 Noetic: T800 exhibition hall.
-  IMPORTANT: this file loads NO robot. Use the existing robot spawn separately.
-
-  There are three distinct components:
-  1. hall                 - visible + collision, hall.dae
-  2. lidar_ceiling        - collision ONLY; no visual geometry
-  3. ground_grid_visual   - visual ONLY; no collision geometry
-
-  The hall pose/mesh scale are based on the corrected working hall version:
-     pose = -14.5715 12.9 0 1.57079632679 0 0; scale = 0.001
-  If your local working hall pose/mesh path differs, keep those working values.
+<!-- Gazebo Classic 11 / ROS1 Noetic: exhibition hall + invisible LiDAR ceiling.
+     Robot is spawned separately by launch/hall_with_t800.launch.
+     Do not change the tested hall mesh transform or scale below.
 -->
 <sdf version="1.6">
   <world name="hall_world">
@@ -24,21 +15,32 @@
       <ambient>0.5 0.5 0.5 1.0</ambient>
       <background>0.7 0.7 0.7 1.0</background>
       <shadows>false</shadows>
-      <!-- The Gazebo Classic built-in 20x20 GUI grid (view only). -->
-      <!-- Set false if it overlaps with ground_grid_visual. -->
+      <!-- Gazebo GUI grid: visual reference only, no collision. -->
       <grid>true</grid>
     </scene>
+
+    <!-- ========================================================= -->
+    <!-- INITIAL GAZEBO GUI CAMERA (WORLD frame)                    -->
+    <!-- pose = x y z roll pitch yaw (m / radians)                 -->
+    <!-- Example: above the south side of the hall, looking north -->
+    <!-- Rotate yaw to change direction; increase pitch to look   -->
+    <!-- further downward. Camera does NOT affect robot sensors.  -->
+    <!-- ========================================================= -->
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>0 -26 17 0 0.52 1.5708</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
 
     <include>
       <uri>model://sun</uri>
     </include>
 
-    <!-- =========================================================== -->
-    <!-- 1. HALL: KEEP THESE SETTINGS FROM YOUR WORKING HALL WORLD. -->
-    <!-- =========================================================== -->
+    <!-- HALL: keep the previously validated pose, mesh and scale. -->
     <model name="hall">
       <static>true</static>
-      <!-- World pose: x y z roll pitch yaw, meters and radians -->
+      <!-- x y z roll pitch yaw, measured in Gazebo WORLD -->
       <pose>-14.5715 12.9 0 1.57079632679 0 0</pose>
       <link name="hall_link">
         <gravity>false</gravity>
@@ -61,31 +63,44 @@
       </link>
     </model>
 
-    <!-- =========================================================== -->
-    <!-- 2. LiDAR ceiling: COLLISION ONLY; no visual, no gravity.    -->
-    <!--    Edit: pose.z = 4.0 meters, size = X Y thickness meters. -->
-    <!--    The pose is in the Gazebo WORLD frame (not hall frame).   -->
-    <!-- =========================================================== -->
+    <!-- LiDAR ceiling: ONLY collision, deliberately invisible. -->
     <model name="lidar_ceiling">
       <static>true</static>
-      <!-- Center of ceiling box; x y z roll pitch yaw -->
+      <!-- Ceiling box CENTER pose: x y z roll pitch yaw -->
       <pose>0 0 4.0 0 0 0</pose>
       <link name="ceiling_link">
         <gravity>false</gravity>
         <collision name="ceiling_collision">
           <geometry>
             <box>
-              <!-- X length, Y length, Z thickness -->
+              <!-- x-size y-size thickness, in metres -->
               <size>30.0 28.0 0.02</size>
             </box>
           </geometry>
         </collision>
-        <!-- Intentionally NO <visual> element. -->
+        <!-- NO visual: camera can see T800 through ceiling. -->
+      </link>
+    </model>
+    
+    <!-- LiDAR floor: ONLY collision, deliberately invisible. -->
+    <model name="lidar_floor">
+      <static>true</static>
+      <!-- Ceiling box CENTER pose: x y z roll pitch yaw -->
+      <pose>0 0 -0.03 0 0 0</pose>
+      <link name="floor_link">
+        <gravity>false</gravity>
+        <collision name="floor_collision">
+          <geometry>
+            <box>
+              <!-- x-size y-size thickness, in metres -->
+              <size>30.0 28.0 0.02</size>
+            </box>
+          </geometry>
+        </collision>
+        <!-- NO visual: camera can see T800 through ceiling. -->
       </link>
     </model>
 
-
-    <!-- Do not add a separate ground_plane unless hall.dae lacks a floor. -->
-    <!-- Built-in GUI grid and ground_grid_visual DO NOT provide collision. -->
+    <!-- No extra ground_plane: hall.dae has its own collision mesh. -->
   </world>
 </sdf>

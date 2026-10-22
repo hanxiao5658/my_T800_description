@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<launch>
+  <!--
+    Gazebo Classic 11 + ROS1 Noetic
+    Start the existing hall.world, then spawn the current T800 URDF.
+    The robot's MuJoCo -> Gazebo sync nodes are started SEPARATELY,
+    after the t800 model is present.
+  -->
+
+  <!-- Gazebo launch arguments -->
+  <arg name="gui" default="true"/>
+  <arg name="paused" default="false"/>
+  <arg name="verbose" default="true"/>
+
+  <!-- Use the already-tested URDF: upper-body collision + MID360 + IMU. -->
+  <arg name="robot_urdf"
+       default="$(find t800_description)/urdf/serial_t800_visual_mid360_imu_upper_collision.urdf"/>
+  <!-- IMPORTANT: keep robot_name=t800: the existing sync scripts expect it. -->
+  <arg name="robot_name" default="t800"/>
+
+  <!-- Gazebo WORLD coordinates, not the MuJoCo initial pose. -->
+  <!-- Z=1.0 is an initial guess for the pelvis/base root height; adjust it. -->
+  <arg name="robot_x" default="5.32"/>
+  <arg name="robot_y" default="-6.1"/>
+  <arg name="robot_z" default="1.0"/>
+  <arg name="robot_roll" default="0.0"/>
+  <arg name="robot_pitch" default="0.0"/>
+  <arg name="robot_yaw" default="-1.5996"/>
+
+  <!-- 1. Start the EXISTING tested hall launch; don't duplicate Gazebo. -->
+  <include file="$(find t800_description)/launch/hall_world.launch">
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="verbose" value="$(arg verbose)"/>
+  </include>
+
+  <!-- 2. Spawn the URDF through gazebo_ros, model name fixed to 't800'. -->
+  <node pkg="gazebo_ros"
+        type="spawn_model"
+        name="spawn_t800_hall"
+        output="screen"
+        respawn="false"
+        args="-urdf -file $(arg robot_urdf) -model $(arg robot_name) -x $(arg robot_x) -y $(arg robot_y) -z $(arg robot_z) -R $(arg robot_roll) -P $(arg robot_pitch) -Y $(arg robot_yaw)"/>
+        
+  <!-- 3. 负责加载可视化 Waypoint 圆柱。 -->
+  <!-- 默认读取你当前的目录与 .yamel 文件名；也可在命令行覆盖。 -->
+  <arg name="waypoint_file"
+       default="$(find t800_description)/../t800_navigation_ros1/config/waypoints.yaml"/>
+
+  <!-- 黄色圆柱尺寸（米）。半径 0.3m、厚度 0.01m。 -->
+  <arg name="radius" default="0.30"/>
+  <arg name="height" default="0.01"/>
+
+  <!-- 圆柱中心相对 Gazebo 世界的 Z 坐标，默认底部距 Z=0 约 1cm。 -->
+  <arg name="marker_z" default="0.015"/>
+
+  <!-- 再次启动时，更新同名标记的位置，不会影响其他 Gazebo 模型。 -->
+  <arg name="replace_existing" default="true"/>
+
+  <node pkg="t800_description"
+        type="spawn_waypoint_markers.py"
+        name="spawn_waypoint_markers"
+        output="screen"
+        required="false">
+    <param name="waypoint_file" value="$(arg waypoint_file)"/>
+    <param name="radius" value="$(arg radius)"/>
+    <param name="height" value="$(arg height)"/>
+    <param name="marker_z" value="$(arg marker_z)"/>
+    <param name="replace_existing" value="$(arg replace_existing)"/>
+  </node>
+  
+</launch>

@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!--
+  Gazebo Classic 11 / ROS1 Noetic: T800 exhibition hall.
+  IMPORTANT: this file loads NO robot. Use the existing robot spawn separately.
+
+  There are three distinct components:
+  1. hall                 - visible + collision, hall.dae
+  2. lidar_ceiling        - collision ONLY; no visual geometry
+  3. ground_grid_visual   - visual ONLY; no collision geometry
+
+  The hall pose/mesh scale are based on the corrected working hall version:
+     pose = -14.5715 12.9 0 1.57079632679 0 0; scale = 0.001
+  If your local working hall pose/mesh path differs, keep those working values.
+-->
+<sdf version="1.6">
+  <world name="hall_world">
+    <gravity>0 0 -9.81</gravity>
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <scene>
+      <ambient>0.5 0.5 0.5 1.0</ambient>
+      <background>0.7 0.7 0.7 1.0</background>
+      <shadows>false</shadows>
+      <!-- The Gazebo Classic built-in 20x20 GUI grid (view only). -->
+      <!-- Set false if it overlaps with ground_grid_visual. -->
+      <grid>true</grid>
+    </scene>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- =========================================================== -->
+    <!-- 1. HALL: KEEP THESE SETTINGS FROM YOUR WORKING HALL WORLD. -->
+    <!-- =========================================================== -->
+    <model name="hall">
+      <static>true</static>
+      <!-- World pose: x y z roll pitch yaw, meters and radians -->
+      <pose>-14.5715 12.9 0 1.57079632679 0 0</pose>
+      <link name="hall_link">
+        <gravity>false</gravity>
+        <visual name="hall_visual">
+          <geometry>
+            <mesh>
+              <uri>file:///root/catkin_ws/src/t800_description/meshes/hall.dae</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="hall_collision">
+          <geometry>
+            <mesh>
+              <uri>file:///root/catkin_ws/src/t800_description/meshes/hall.dae</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- =========================================================== -->
+    <!-- 2. LiDAR ceiling: COLLISION ONLY; no visual, no gravity.    -->
+    <!--    Edit: pose.z = 4.0 meters, size = X Y thickness meters. -->
+    <!--    The pose is in the Gazebo WORLD frame (not hall frame).   -->
+    <!-- =========================================================== -->
+    <model name="lidar_ceiling">
+      <static>true</static>
+      <!-- Center of ceiling box; x y z roll pitch yaw -->
+      <pose>0 0 4.0 0 0 0</pose>
+      <link name="ceiling_link">
+        <gravity>false</gravity>
+        <collision name="ceiling_collision">
+          <geometry>
+            <box>
+              <!-- X length, Y length, Z thickness -->
+              <size>30.0 28.0 0.02</size>
+            </box>
+          </geometry>
+        </collision>
+        <!-- Intentionally NO <visual> element. -->
+      </link>
+    </model>
+
+
+    <!-- Do not add a separate ground_plane unless hall.dae lacks a floor. -->
+    <!-- Built-in GUI grid and ground_grid_visual DO NOT provide collision. -->
+  </world>
+</sdf>
