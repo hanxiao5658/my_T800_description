@@ -17,5 +17,32 @@
   <node name="robot_state_publisher"
         pkg="robot_state_publisher"
         type="robot_state_publisher" />
+        
+  <!-- 3. 负责加载可视化 Waypoint 圆柱。 -->
+  <!-- 默认读取你当前的目录与 .yamel 文件名；也可在命令行覆盖。 -->
+  <arg name="waypoint_file"
+       default="$(find t800_description)/../t800_navigation_ros1/config/waypoints.yaml"/>
+
+  <!-- 黄色圆柱尺寸（米）。半径 0.3m、厚度 0.01m。 -->
+  <arg name="radius" default="0.30"/>
+  <arg name="height" default="0.01"/>
+
+  <!-- 圆柱中心相对 Gazebo 世界的 Z 坐标，默认底部距 Z=0 约 1cm。 -->
+  <arg name="marker_z" default="0.015"/>
+
+  <!-- 再次启动时，更新同名标记的位置，不会影响其他 Gazebo 模型。 -->
+  <arg name="replace_existing" default="true"/>
+
+  <node pkg="t800_description"
+        type="spawn_waypoint_markers.py"
+        name="spawn_waypoint_markers"
+        output="screen"
+        required="false">
+    <param name="waypoint_file" value="$(arg waypoint_file)"/>
+    <param name="radius" value="$(arg radius)"/>
+    <param name="height" value="$(arg height)"/>
+    <param name="marker_z" value="$(arg marker_z)"/>
+    <param name="replace_existing" value="$(arg replace_existing)"/>
+  </node>
 </launch>
 
